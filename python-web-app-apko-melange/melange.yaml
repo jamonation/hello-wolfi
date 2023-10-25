@@ -1,0 +1,35 @@
+package:
+  name: python-web-app
+  version: 0.1.0
+  description: friendly little webserver
+  target-architecture:
+    - x86_64
+    - aarch64
+  copyright:
+    - license: Apache-2.0
+      paths:
+        - "*"
+
+environment:
+  contents:
+    repositories:
+      - https://packages.wolfi.dev/os
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    packages:
+      - build-base
+      - ca-certificates-bundle
+      - busybox
+      - python3
+      - py3-pip
+
+pipeline:
+  - name: Build Python application
+    runs: |
+      pip install -r requirements.txt
+
+      mkdir -p ${{targets.destdir}}/usr/lib/python3.12
+      cp -r /usr/lib/python3.12/site-packages ${{targets.destdir}}/usr/lib/python3.12/
+
+      mkdir -p ${{targets.destdir}}/opt/python-web-app
+      cp main.py ${{targets.destdir}}/opt/python-web-app/
